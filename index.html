@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Audio Player</title>
 </head>
 <body>
     <div>
         <button id="play-random">Play Random Audio</button>
     </div>
+    <div id="audio-name"></div>
 
     <script>
-        const playRandomButton = document.getElementById('play-random');
+        document.addEventListener('DOMContentLoaded', () => {
+            const playRandomButton = document.getElementById('play-random');
+            const audioName = document.getElementById('audio-name');
+            const body = document.body;
 
-        playRandomButton.addEventListener('click', () => {
-            fetch('https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt')
-                .then(response => response.text())
-                .then(data => {
+            // Function to update the audio name
+            function updateAudioName(name) {
+                audioName.textContent = `Now Playing: ${name}`;
+            }
+
+            // Toggle dark mode
+            playRandomButton.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt');
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch audio links: ${response.status} - ${response.statusText}`);
+                    }
+
+                    const data = await response.text();
                     const audioUrls = data.trim().split('\n');
                     const randomAudioUrl = audioUrls[Math.floor(Math.random() * audioUrls.length)];
 
@@ -25,11 +41,14 @@
                     playButton.textContent = 'Play Audio';
                     playButton.addEventListener('click', () => {
                         audioPlayer.play();
+                        updateAudioName(randomAudioUrl.split('/').pop()); // Show the name of the audio
                     });
 
                     document.body.appendChild(playButton);
-                })
-                .catch(error => console.error('Error fetching audio links:', error));
+                } catch (error) {
+                    console.error('Error fetching audio links:', error);
+                }
+            });
         });
     </script>
 </body>
