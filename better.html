@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Audio Player</title>
+</head>
+<body>
+    <h1>Random Audio Player</h1>
+    <audio id="audioPlayer" controls></audio>
+    <p id="currentAudioName">Current Audio: None</p>
+    <button id="shuffleButton">Shuffle</button>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const currentAudioName = document.getElementById('currentAudioName');
+        const shuffleButton = document.getElementById('shuffleButton');
+        const audioListURL = 'https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt';
+
+        let audioList = [];
+
+        // Function to play a random audio
+        function playRandomAudio() {
+            const randomIndex = Math.floor(Math.random() * audioList.length);
+            const audioURL = audioList[randomIndex];
+
+            if (audioURL) {
+                audioPlayer.src = audioURL;
+                currentAudioName.textContent = `Current Audio: ${audioURL}`;
+
+                // Wait for the audio to be ready before playing
+                audioPlayer.addEventListener('canplay', () => {
+                    audioPlayer.play();
+                });
+            }
+        }
+
+        // Fetch the audio list from the provided URL
+        fetch(audioListURL)
+            .then(response => response.text())
+            .then(data => {
+                audioList = data.split('\n');
+                playRandomAudio(); // Play a random audio once the list is loaded
+            })
+            .catch(error => console.error('Error fetching audio list:', error));
+
+        // Shuffle button click event
+        shuffleButton.addEventListener('click', playRandomAudio);
+    </script>
+</body>
+</html>
