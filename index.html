@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Audio Player</title>
+</head>
+<body>
+    <div>
+        <button id="play-random">Play Random Audio</button>
+    </div>
+
+    <script>
+        const playRandomButton = document.getElementById('play-random');
+
+        playRandomButton.addEventListener('click', () => {
+            fetch('https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const audioUrls = data.trim().split('\n');
+                    const randomAudioUrl = audioUrls[Math.floor(Math.random() * audioUrls.length)];
+
+                    const audioPlayer = new Audio(randomAudioUrl);
+
+                    // Add a play button for the randomly selected audio file
+                    const playButton = document.createElement('button');
+                    playButton.textContent = 'Play Audio';
+                    playButton.addEventListener('click', () => {
+                        audioPlayer.play();
+                    });
+
+                    document.body.appendChild(playButton);
+                })
+                .catch(error => console.error('Error fetching audio links:', error));
+        });
+    </script>
+</body>
+</html>
