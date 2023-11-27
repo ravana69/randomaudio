@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Audio Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #121212;
             color: #ffffff;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
             padding: 0;
@@ -16,15 +17,18 @@
 
         h1 {
             color: #03a9f4;
+            font-size: 2em;
         }
 
         audio {
             width: 70%;
             margin-top: 20px;
+            outline: none;
         }
 
         p {
             color: #03a9f4;
+            margin-top: 10px;
         }
 
         button {
@@ -35,18 +39,34 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            border-radius: 5px;
         }
 
         button:hover {
             background-color: #0288d1;
         }
+
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .icon {
+            font-size: 24px;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>Futuristic Audio Player</h1>
-    <audio id="audioPlayer" controls></audio>
-    <p id="currentAudioName">Current Audio: None</p>
-    <button id="shuffleButton">Shuffle</button>
+    <div class="player-container">
+        <h1>Futuristic Audio Player</h1>
+        <audio id="audioPlayer" controls></audio>
+        <p id="currentAudioName">Current Audio: None</p>
+        <button id="shuffleButton"><i class="icon fas fa-random"></i> Shuffle</button>
+    </div>
 
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
