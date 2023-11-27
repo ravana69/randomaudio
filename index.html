@@ -61,6 +61,8 @@
     </style>
 </head>
 <body>
+    <div id="datetime" style="color: #03a9f4; font-size: 1.2em; margin-top: 10px;"></div>
+
     <div class="player-container">
         <h1>Futuristic Audio Player</h1>
         <audio id="audioPlayer" controls></audio>
@@ -69,6 +71,19 @@
     </div>
 
     <script>
+        function updateDateTime() {
+            const dateTimeElement = document.getElementById('datetime');
+            const options = { timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            const currentDateTime = new Date().toLocaleString('en-US', options);
+            dateTimeElement.textContent = `${currentDateTime}`;
+        }
+
+        // Initial update
+        updateDateTime();
+
+        // Update time every second
+        setInterval(updateDateTime, 1000);
+
         const audioPlayer = document.getElementById('audioPlayer');
         const currentAudioName = document.getElementById('currentAudioName');
         const shuffleButton = document.getElementById('shuffleButton');
