@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+  <title>Music Table</title>
+
+  <style>
+    body {
+      background-color: #303030;
+      color: #fff; 
+    }
+    
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #424242;
+    }
+    
+    th {
+      background-color: #212121;
+      font-weight: 400;
+      padding: 10px;
+    }
+    
+    td {  
+      padding: 10px;
+      border-bottom: 1px solid #555; 
+    }
+    
+    h2 {
+      color: #eee;    
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <h2>Music Table</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>S.No.</th>
+        <th>Serial Number</th> 
+      </tr>
+    </thead>
+
+    <tbody id="musicTableBody"></tbody>
+  
+  </table>
+
+  <script>
+    fetch('https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt')
+      .then(response => response.text())
+      .then(data => {
+
+        const musicArray = data.split('\n').map(line => {
+          const [serialNumber] = line.split('|');
+          return { serialNumber }; 
+        });
+
+        const tableBody = document.getElementById('musicTableBody');
+        
+        musicArray.forEach((music, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${music.serialNumber}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+      })
+      .catch(error => console.error('Error fetching music data', error));
+  </script>
+
+</body>
+</html>
