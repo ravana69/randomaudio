@@ -67,6 +67,7 @@
         <h1>Office Audio Player</h1>
         <audio id="audioPlayer" controls></audio>
         <p id="currentAudioName">Current Audio: None</p>
+        <p id="audioCount">Current Audio URL Number: 0</p>
         <button id="shuffleButton"><i class="icon fas fa-random"></i> Shuffle</button>
     </div>
 
@@ -86,6 +87,7 @@
 
         const audioPlayer = document.getElementById('audioPlayer');
         const currentAudioName = document.getElementById('currentAudioName');
+        const audioCount = document.getElementById('audioCount');
         const shuffleButton = document.getElementById('shuffleButton');
         const audioListURL = 'https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt';
 
@@ -106,6 +108,7 @@
             if (audioURL) {
                 audioPlayer.src = audioURL;
                 currentAudioName.textContent = `Current Audio: ${audioURL}`;
+                audioCount.textContent = `Current Audio URL Number: ${currentAudioIndex + 1}`;
 
                 audioPlayer.addEventListener('canplay', () => {
                     audioPlayer.play();
