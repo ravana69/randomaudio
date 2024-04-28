@@ -51,7 +51,7 @@
             const audio = document.getElementById('audio');
             const randomIndex = Math.floor(Math.random() * songs.length);
             const randomSong = songs[randomIndex];
-            const songName = randomSong.split('/').pop().split('.')[0]; // Extract song name
+            const songName = decodeURIComponent(randomSong.split('/').pop().split('.')[0]).replace(/%20/g, ' '); // Extract song name
             const songNumber = randomIndex + 1; // URL number is 1-based index
 
             audio.src = randomSong;
