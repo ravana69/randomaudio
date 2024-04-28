@@ -111,7 +111,8 @@
 
             if (audioURL) {
                 audioPlayer.src = audioURL;
-                currentAudioName.textContent = `Current Audio: ${audioURL}`;
+                const audioFileName = audioURL.split('/').pop().split('.')[0];
+                currentAudioName.textContent = `Current Audio: ${audioFileName}`;
                 audioCount.textContent = `Current Audio URL Number: ${currentAudioIndex + 1}`;
 
                 audioPlayer.addEventListener('canplay', () => {
