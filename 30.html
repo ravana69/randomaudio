@@ -38,7 +38,7 @@
 
     <script>
         window.onload = function() {
-            fetch('https://github.com/ravana69/randomaudio/releases/download/sauce/source.txt')
+            fetch('https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt')
                 .then(response => response.text())
                 .then(data => {
                     const songs = data.split('\n');
