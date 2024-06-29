@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Audio Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #00FF00; /* Hacker green color */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        audio {
+            width: 70%;
+            margin-top: 20px;
+            outline: none;
+            filter: brightness(85%) sepia(100%) hue-rotate(120deg) saturate(200%);
+        }
+
+        p {
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #03a9f4;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #00FF00;
+        }
+
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .icon {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        img#spectrogramImage {
+            width: 70%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="datetime" style="font-size: 1.2em; margin-top: 10px;"></div>
+
+    <div class="player-container">
+        <h1>Office Audio Player</h1>
+        <audio id="audioPlayer" controls></audio>
+        <img id="spectrogramImage" src="" alt="Spectrogram">
+        <p id="currentAudioName">Current Audio: None</p>
+        <p id="audioCount">Current Audio URL Number: 0</p>
+        <button id="shuffleButton"><i class="icon fas fa-random"></i> Shuffle</button>
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const dateTimeElement = document.getElementById('datetime');
+            const options = { timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            const currentDateTime = new Date().toLocaleString('en-US', options);
+            dateTimeElement.textContent = `${currentDateTime}`;
+        }
+
+        // Initial update
+        updateDateTime();
+
+        // Update time every second
+        setInterval(updateDateTime, 1000);
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const currentAudioName = document.getElementById('currentAudioName');
+        const audioCount = document.getElementById('audioCount');
+        const shuffleButton = document.getElementById('shuffleButton');
+        const audioListURL = 'https://raw.githubusercontent.com/ravana69/randomaudio/main/source.txt';
+
+        let audioList = [];
+        let currentAudioIndex = -1;
+
+        function playRandomAudio() {
+            const randomIndex = Math.floor(Math.random() * audioList.length);
+
+            if (randomIndex !== currentAudioIndex) {
+                currentAudioIndex = randomIndex;
+            } else {
+                currentAudioIndex = (randomIndex + 1) % audioList.length;
+            }
+
+            const audioURL = audioList[currentAudioIndex];
+
+            if (audioURL) {
+                const audioFileName = decodeURIComponent(audioURL.split('/').pop().split('.')[0]).replace(/%20/g, ' ');
+                currentAudioName.textContent = `Current Audio: ${audioFileName}`;
+                audioCount.textContent = `Current Audio URL Number: ${currentAudioIndex + 1}`;
+
+                // Determine the spectrogram image URL
+                const spectrogramURL = getSpectrogramURL(audioURL);
+
+                // Set audio player source
+                audioPlayer.src = audioURL;
+
+                // Display spectrogram image
+                const spectrogramImage = document.getElementById('spectrogramImage');
+                spectrogramImage.src = spectrogramURL;
+
+                audioPlayer.addEventListener('canplay', () => {
+                    audioPlayer.play();
+                });
+            }
+        }
+
+        function getSpectrogramURL(audioURL) {
+            const extension = audioURL.split('.').pop().toLowerCase();
+            let spectrogramExtension = '_spectrogram.png';
+
+            // Adjust spectrogram image extension based on audio format
+            if (extension === 'mp3' || extension === 'ogg' || extension === 'wav' || extension === 'aac') {
+                spectrogramExtension = `_spectrogram.${extension}.png`;
+            }
+
+            return audioURL.replace(`.${extension}`, spectrogramExtension);
+        }
+
+        fetch(audioListURL)
+            .then(response => response.text())
+            .then(data => {
+                audioList = data.split('\n');
+                playRandomAudio();
+            })
+            .catch(error => console.error('Error fetching audio list:', error));
+
+        shuffleButton.addEventListener('click', playRandomAudio);
+
+        audioPlayer.addEventListener('ended', playRandomAudio);
+    </script>
+</body>
+</html>
