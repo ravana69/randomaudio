@@ -73,6 +73,11 @@
         <button id="goreButton"><i class="icon fas fa-paint-brush"></i> Gore</button>
     </div>
 
+    <div id="previousAudios">
+        <h2>Previously Played:</h2>
+        <ul id="previousList"></ul>
+    </div>
+
     <script>
         function updateDateTime() {
             const dateTimeElement = document.getElementById('datetime');
@@ -97,6 +102,7 @@
 
         let audioList = [];
         let currentAudioIndex = -1;
+        let lastPlayedAudios = [];
 
         function playRandomAudio() {
             const randomIndex = Math.floor(Math.random() * audioList.length);
@@ -115,10 +121,30 @@
                 currentAudioName.textContent = `Current Audio: ${audioFileName}`;
                 audioCount.textContent = `Current Audio URL Number: ${currentAudioIndex + 1}`;
 
+                // Add audio to previously played list
+                if (lastPlayedAudios.length >= 5) {
+                    lastPlayedAudios.shift(); // Remove the oldest audio if list is full
+                }
+                lastPlayedAudios.push(audioFileName);
+
+                // Update the displayed list
+                updatePreviousList();
+
                 audioPlayer.addEventListener('canplay', () => {
                     audioPlayer.play();
                 });
             }
+        }
+
+        function updatePreviousList() {
+            const previousList = document.getElementById('previousList');
+            previousList.innerHTML = ''; // Clear previous list
+
+            lastPlayedAudios.forEach(audio => {
+                const listItem = document.createElement('li');
+                listItem.textContent = audio;
+                previousList.appendChild(listItem);
+            });
         }
 
         fetch(audioListURL)
